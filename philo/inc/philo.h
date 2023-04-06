@@ -6,7 +6,7 @@
 /*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 12:27:15 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/05 15:45:01 by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/06 17:15:52 by hbenfadd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <pthread.h>
+# include <sys/time.h>
 
 typedef struct s_infos
 {
@@ -26,11 +27,14 @@ typedef struct s_infos
 	int				time_2s;
 	int				num_2e;
 	pthread_mutex_t	*fork;
+	pthread_mutex_t	putmsg;
 
 }		t_infos;
 
 typedef struct s_philosophere
 {
+	int				id;
+	size_t			start;
 	int				last_eat;
 	pthread_mutex_t	*rf;
 	pthread_mutex_t	*lf;
@@ -39,6 +43,7 @@ typedef struct s_philosophere
 }	t_philo;
 
 int	ft_atoi(const char *str);
-int	philosopheres(t_philo *philo, t_infos *info);
+int	philosopheres(t_infos *info);
+size_t	get_time_ms(void);
 
 #endif
