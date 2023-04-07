@@ -14,8 +14,8 @@
 
 int	init_philo(t_philo *philo, t_infos *info)
 {
-	int	i;
-	long start_time;
+	int		i;
+	long	start_time;
 
 	start_time = get_time_ms();
 
@@ -28,6 +28,7 @@ int	init_philo(t_philo *philo, t_infos *info)
 		philo[i].lf = &info->fork[i];
 		philo[i].info = info;
 		philo[i].start = start_time;
+		pthread_mutex_init(&philo[i].check_death, NULL);
 	}
 	return (EXIT_SUCCESS);
 }
@@ -36,7 +37,8 @@ void	putmsg(t_philo *philo, char *action)
 {
 	pthread_mutex_lock(&philo->info->putmsg);
 	printf("%zu %d %s\n", get_time_ms() - philo->start, philo->id + 1, action);
-	pthread_mutex_unlock(&philo->info->putmsg);
+	if (ft_strlen(action) != 8)
+		pthread_mutex_unlock(&philo->info->putmsg);
 }
 
 void	*philo_rotune(void *ptr)
@@ -53,6 +55,10 @@ void	*philo_rotune(void *ptr)
 		pthread_mutex_lock(philo->rf);
 		putmsg(philo, "has taken a fork");
 		putmsg(philo, "is eating");
+		pthread_mutex_lock(&philo->check_death);
+		check_death(philos);
+		philo->last_eat = get_time_ms();
+		pthread_mutex_unlock(&philo->check_death);
 		ft_usleep(philo->info->time_2e);
 		pthread_mutex_unlock(philo->lf);
 		pthread_mutex_unlock(philo->rf);
@@ -60,6 +66,23 @@ void	*philo_rotune(void *ptr)
 		ft_usleep(philo->info->time_2s);
 	}
 	return (NULL);
+}
+
+void check_death(t_philo *philo)
+{
+	int i;
+
+	i = -1;
+	while (++i < philo->info->num)
+	{
+		pthread_mutex_lock(&philo[i].check_death);
+		if (get_time_ms() - philo[i].last_eat > philo->info->time_2d)
+		{
+			putmsg(&philo[i], "is dead");
+			exit(EXIT_SUCCESS);
+		}
+		pthread_mutex_unlock(&philo[i].check_death);
+	}
 }
 
 int	create_philo(t_philo *philo, int num)
@@ -86,5 +109,7 @@ int	philosopheres(t_infos *info)
 		return (write(2, "Error\nmalloc failed\n", 21), EXIT_FAILURE);
 	init_philo(philos, info);
 	create_philo(philos, info->num);
+	while (1)
+		check_death(philos);
 	return (EXIT_SUCCESS);
 }

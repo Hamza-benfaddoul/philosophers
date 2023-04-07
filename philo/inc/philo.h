@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hamza <hamza@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 12:27:15 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/07 09:34:51 by hamza            ###   ########.fr       */
+/*   Updated: 2023/04/07 15:07:10 by hbenfadd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,17 @@ typedef struct s_philosophere
 	int				id;
 	size_t			start;
 	int				last_eat;
+	pthread_mutex_t	check_death;
 	pthread_mutex_t	*rf;
 	pthread_mutex_t	*lf;
 	t_infos			*info;
 
 }	t_philo;
 
-int	ft_atoi(const char *str);
-int	philosopheres(t_infos *info);
+int		ft_atoi(const char *str);
+int		philosopheres(t_infos *info);
 long	get_time_ms(void);
 void	ft_usleep(long time);
+size_t	ft_strlen(const char *s);
 
 #endif

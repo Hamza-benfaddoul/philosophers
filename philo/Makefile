@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hamza <hamza@student.42.fr>                +#+  +:+       +#+         #
+#    By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/06 15:34:29 by hbenfadd          #+#    #+#              #
-#    Updated: 2023/04/07 09:39:02 by hamza            ###   ########.fr        #
+#    Updated: 2023/04/07 15:06:45 by hbenfadd         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ YALLOW	= \033[1;93m
 Green	= \033[1;32m
 
 # src files
-SRC = ft_atoi.c philosophere.c get_time_ms.c ft_usleep.c
+SRC = ft_atoi.c philosophere.c get_time_ms.c ft_usleep.c ft_strlen.c
 
 
 SRCS = $(addprefix ./src/, $(SRC)) main.c 
