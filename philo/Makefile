@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+         #
+#    By: hamza <hamza@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/06 15:34:29 by hbenfadd          #+#    #+#              #
-#    Updated: 2023/04/06 17:25:36 by hbenfadd         ###   ########.fr        #
+#    Updated: 2023/04/07 09:39:02 by hamza            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME		= philo
 
 CC		= cc 
 HEADER	= -I./inc
-CFLAGS	=  -Wall -Wextra -Werror -g $(HEADER) -fsanitize=thread
+CFLAGS	=  -Wall -Wextra -Werror -g $(HEADER) #-fsanitize=thread
 RM		= rm -rf
 
 # colors
@@ -23,7 +23,7 @@ YALLOW	= \033[1;93m
 Green	= \033[1;32m
 
 # src files
-SRC = ft_atoi.c philosophere.c get_time_ms.c
+SRC = ft_atoi.c philosophere.c get_time_ms.c ft_usleep.c
 
 
 SRCS = $(addprefix ./src/, $(SRC)) main.c 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hamza <hamza@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 12:27:15 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/06 17:15:52 by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/07 09:34:51 by hamza            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ typedef struct s_infos
 	int				time_2d;
 	int				time_2e;
 	int				time_2s;
-	int				num_2e;
+	int				nbr_of_t2e;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	putmsg;
 
@@ -44,6 +44,7 @@ typedef struct s_philosophere
 
 int	ft_atoi(const char *str);
 int	philosopheres(t_infos *info);
-size_t	get_time_ms(void);
+long	get_time_ms(void);
+void	ft_usleep(long time);
 
 #endif
