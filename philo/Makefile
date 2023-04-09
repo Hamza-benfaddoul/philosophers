@@ -6,11 +6,11 @@
 #    By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/06 15:34:29 by hbenfadd          #+#    #+#              #
-#    Updated: 2023/04/07 15:06:45 by hbenfadd         ###   ########.fr        #
+#    Updated: 2023/04/09 10:44:41 by hbenfadd         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME		= philo
+NAME	= philo
 
 CC		= cc 
 HEADER	= -I./inc
@@ -23,13 +23,13 @@ YALLOW	= \033[1;93m
 Green	= \033[1;32m
 
 # src files
-SRC = ft_atoi.c philosophere.c get_time_ms.c ft_usleep.c ft_strlen.c
+SRC		= ft_atoi.c philosophere.c get_time_ms.c ft_usleep.c utils.c
 
 
-SRCS = $(addprefix ./src/, $(SRC)) main.c 
+SRCS	= $(addprefix ./src/, $(SRC)) main.c 
 
 # obj files
-OBJS = $(SRCS:.c=.o)
+OBJS	= $(SRCS:.c=.o)
 
 all : $(NAME)
 

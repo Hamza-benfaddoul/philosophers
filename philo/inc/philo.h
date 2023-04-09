@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hamza <hamza@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 12:27:15 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/08 10:16:42 by hamza            ###   ########.fr       */
+/*   Updated: 2023/04/09 12:39:48 by hbenfadd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ typedef struct s_infos
 	int				time_2d;
 	int				time_2e;
 	int				time_2s;
-	int				nbr_of_t2e;
+	int				nbr_t2e;
+	int				overeat;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	putmsg;
 
@@ -36,6 +37,7 @@ typedef struct s_philosophere
 	int				id;
 	size_t			start;
 	long			last_eat;
+	int				is_eaten;
 	pthread_mutex_t	check_death;
 	pthread_mutex_t	*rf;
 	pthread_mutex_t	*lf;
@@ -43,10 +45,10 @@ typedef struct s_philosophere
 
 }	t_philo;
 
-int		ft_atoi(const char *str);
+void	putmsg(t_philo *philo, char *action);
 int		philosopheres(t_infos *info);
-long	get_time_ms(void);
+int		ft_atoi(const char *str);
 void	ft_usleep(long time);
-size_t	ft_strlen(const char *s);
+long	get_time_ms(void);
 
 #endif

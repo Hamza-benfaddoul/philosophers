@@ -6,19 +6,24 @@
 /*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:29:23 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/06 15:22:04by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/09 12:45:42 by hbenfadd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+/**
+ * init_philo - initialize the struct philo
+ * @philo: the struct that contains all the information about the philo
+ * @info: the struct that contains all the information about the program
+ * Return: EXIT_SUCCESS or EXIT_FAILURE
+*/
 int	init_philo(t_philo *philo, t_infos *info)
 {
 	int		i;
 	long	start_time;
 
 	start_time = get_time_ms();
-
 	i = -1;
 	while (++i < info->num)
 	{
@@ -28,17 +33,19 @@ int	init_philo(t_philo *philo, t_infos *info)
 		philo[i].lf = &info->fork[i];
 		philo[i].info = info;
 		philo[i].start = start_time;
-		pthread_mutex_init(&philo[i].check_death, NULL);
+		philo[i].is_eaten = 0;
+		if (pthread_mutex_init(&philo[i].check_death, NULL) != 0)
+			return (write(2, "Error: mutex init failed\n", 25), EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);
 }
 
-void	putmsg(t_philo *philo, char *action)
-{
-	pthread_mutex_lock(&philo->info->putmsg);
-	printf("%zu %d %s\n", get_time_ms() - philo->start, philo->id + 1, action);
-	pthread_mutex_unlock(&philo->info->putmsg);
-}
+/**
+ * philo_rotune - the function that each philosopheres will run in a thread
+ 	and do the actions of the philosopheres (eat, sleep, think)
+ * @ptr: the struct that contains all the information about the philo
+ * Return: NULL
+*/
 void	*philo_rotune(void *ptr)
 {
 	t_philo	*philo;
@@ -54,23 +61,27 @@ void	*philo_rotune(void *ptr)
 		putmsg(philo, "has taken a fork");
 		putmsg(philo, "is eating");
 		pthread_mutex_lock(&philo->check_death);
+		philo->is_eaten ++;
 		philo->last_eat = get_time_ms();
 		pthread_mutex_unlock(&philo->check_death);
 		ft_usleep(philo->info->time_2e);
 		pthread_mutex_unlock(philo->lf);
 		pthread_mutex_unlock(philo->rf);
 		putmsg(philo, "is thinking");
-		putmsg(philo, "is eating");
 		ft_usleep(philo->info->time_2s);
 	}
 	return (NULL);
 }
 
-
-
+/**
+ * check_death - check if a philosopher is dead or not 
+ 	and print the message if he is dead
+ * @philo: struct with all info about philosopheres
+ * Return: 1 if a philosopher is dead, 0 otherwise
+*/
 int	check_death(t_philo *philo)
 {
-	int i;
+	int		i;
 	long	diff_time;
 
 	i = -1;
@@ -82,38 +93,53 @@ int	check_death(t_philo *philo)
 		if (diff_time > philo->info->time_2d)
 		{
 			pthread_mutex_lock(&philo[i].info->putmsg);
-			printf("%zu %d is dead\n", get_time_ms() - philo->start, i + 1);
+			if (!philo[i].info->overeat)
+				printf("%zu %d \033[91mdied\n", diff_time, i + 1);
 			return (1);
 		}
 	}
-	return(0);
+	return (0);
 }
 
+/**
+ * create_philo - create philosopheres threads
+ * @philo: struct with all info about philosopheres
+ * @num: number of philosopheres
+ * Return: EXIT_SUCCESS or EXIT_FAILURE
+*/
 int	create_philo(t_philo *philo, int num)
 {
 	int			i;
 	pthread_t	*th;
 
 	th = (pthread_t *)malloc(sizeof(pthread_t) * num);
+	if (!th)
+		return (write(2, "Error\nmalloc failed\n", 20), EXIT_FAILURE);
 	i = -1;
 	while (++i < num)
 	{
 		philo[i].last_eat = get_time_ms();
-		pthread_create(&th[i], NULL, &philo_rotune, (void *) &philo[i]);
+		if (pthread_create(&th[i], NULL, &philo_rotune, (void *)&philo[i]))
+			return (write(2, "Error\npthread_create failed\n", 28), EXIT_FAILURE);
 	}
-	i = -1;
-	while (!check_death(philo));
+	while (!check_death(philo))
+		;
 	return (EXIT_SUCCESS);
 }
 
+/**
+ * philosopheres - create philosopheres threads and init mutex
+ * @info: struct with all info about program
+ * Return: EXIT_SUCCESS or EXIT_FAILURE
+*/
 int	philosopheres(t_infos *info)
 {
 	t_philo	*philos;
 
 	philos = (t_philo *)malloc(sizeof(t_philo) * info->num);
 	if (!philos)
-		return (write(2, "Error\nmalloc failed\n", 21), EXIT_FAILURE);
-	init_philo(philos, info);
-	create_philo(philos, info->num);
+		return (write(2, "Error\nmalloc failed\n", 20), EXIT_FAILURE);
+	if (init_philo(philos, info) || create_philo(philos, info->num))
+		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }

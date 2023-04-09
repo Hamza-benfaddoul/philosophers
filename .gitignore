@@ -1,3 +1,5 @@
+# name of program executable
+philo
 # Prerequisites
 *.d
 
