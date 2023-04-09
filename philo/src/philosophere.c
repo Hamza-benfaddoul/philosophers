@@ -37,16 +37,14 @@ void	putmsg(t_philo *philo, char *action)
 {
 	pthread_mutex_lock(&philo->info->putmsg);
 	printf("%zu %d %s\n", get_time_ms() - philo->start, philo->id + 1, action);
-	if (ft_strlen(action) != 8)
-		pthread_mutex_unlock(&philo->info->putmsg);
+	pthread_mutex_unlock(&philo->info->putmsg);
 }
-
 void	*philo_rotune(void *ptr)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)ptr;
-	if (philo->id % 2 == 0)
+	if (philo->id % 2)
 		usleep(100);
 	while (1)
 	{
@@ -56,33 +54,39 @@ void	*philo_rotune(void *ptr)
 		putmsg(philo, "has taken a fork");
 		putmsg(philo, "is eating");
 		pthread_mutex_lock(&philo->check_death);
-		check_death(philos);
 		philo->last_eat = get_time_ms();
 		pthread_mutex_unlock(&philo->check_death);
 		ft_usleep(philo->info->time_2e);
 		pthread_mutex_unlock(philo->lf);
 		pthread_mutex_unlock(philo->rf);
 		putmsg(philo, "is thinking");
+		putmsg(philo, "is eating");
 		ft_usleep(philo->info->time_2s);
 	}
 	return (NULL);
 }
 
-void check_death(t_philo *philo)
+
+
+int	check_death(t_philo *philo)
 {
 	int i;
+	long	diff_time;
 
 	i = -1;
 	while (++i < philo->info->num)
 	{
 		pthread_mutex_lock(&philo[i].check_death);
-		if (get_time_ms() - philo[i].last_eat > philo->info->time_2d)
-		{
-			putmsg(&philo[i], "is dead");
-			exit(EXIT_SUCCESS);
-		}
+		diff_time = get_time_ms() - philo[i].last_eat;
 		pthread_mutex_unlock(&philo[i].check_death);
+		if (diff_time > philo->info->time_2d)
+		{
+			pthread_mutex_lock(&philo[i].info->putmsg);
+			printf("%zu %d is dead\n", get_time_ms() - philo->start, i + 1);
+			return (1);
+		}
 	}
+	return(0);
 }
 
 int	create_philo(t_philo *philo, int num)
@@ -93,10 +97,12 @@ int	create_philo(t_philo *philo, int num)
 	th = (pthread_t *)malloc(sizeof(pthread_t) * num);
 	i = -1;
 	while (++i < num)
+	{
+		philo[i].last_eat = get_time_ms();
 		pthread_create(&th[i], NULL, &philo_rotune, (void *) &philo[i]);
+	}
 	i = -1;
-	while (++i < num)
-		pthread_join(th[i], NULL);
+	while (!check_death(philo));
 	return (EXIT_SUCCESS);
 }
 
@@ -109,7 +115,5 @@ int	philosopheres(t_infos *info)
 		return (write(2, "Error\nmalloc failed\n", 21), EXIT_FAILURE);
 	init_philo(philos, info);
 	create_philo(philos, info->num);
-	while (1)
-		check_death(philos);
 	return (EXIT_SUCCESS);
 }
