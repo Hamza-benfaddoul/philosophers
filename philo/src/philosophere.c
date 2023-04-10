@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophere.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hamza <hamza@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:29:23 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/09 12:45:42 by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/09 15:33:37 by hamza            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	*philo_rotune(void *ptr)
 		putmsg(philo, "has taken a fork");
 		putmsg(philo, "is eating");
 		pthread_mutex_lock(&philo->check_death);
-		philo->is_eaten ++;
+		++philo->is_eaten;
 		philo->last_eat = get_time_ms();
 		pthread_mutex_unlock(&philo->check_death);
 		ft_usleep(philo->info->time_2e);
@@ -89,11 +89,18 @@ int	check_death(t_philo *philo)
 	{
 		pthread_mutex_lock(&philo[i].check_death);
 		diff_time = get_time_ms() - philo[i].last_eat;
+		if (philo[i].is_eaten == philo[i].info->nbr_t2e)
+		{
+			philo[i].is_eaten++;
+			philo[i].info->overeat++;
+		}
 		pthread_mutex_unlock(&philo[i].check_death);
-		if (diff_time > philo->info->time_2d)
+		if (diff_time > philo->info->time_2d || philo[i].info->overeat == philo[i].info->num )
 		{
 			pthread_mutex_lock(&philo[i].info->putmsg);
-			if (!philo[i].info->overeat)
+			if(philo[i].info->overeat == philo[i].info->num)
+				printf("%zu all philos eate %d times\n", diff_time, philo->info->nbr_t2e * philo->info->num);
+			else
 				printf("%zu %d \033[91mdied\n", diff_time, i + 1);
 			return (1);
 		}
