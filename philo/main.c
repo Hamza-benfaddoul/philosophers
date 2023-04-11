@@ -6,7 +6,7 @@
 /*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 14:23:21 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/11 11:22:36 by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/11 14:17:52 by hbenfadd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,12 @@ int	init_infos(t_infos *info, char **av)
 }
 
 /**
- * check_arg - check if the arguments are valid
+ * check_args - check if the arguments are valid
  * @ac: the number of arguments
  * @av: the arguments
  * Return: EXIT_SUCCESS or EXIT_FAILURE
 */
-int	check_arg(int ac, char **av)
+int	check_args(int ac, char **av)
 {
 	int	i;
 	int	j;
@@ -108,7 +108,7 @@ int	main(int ac, char **av)
 {
 	t_infos	info;
 
-	if (ac < 5 || ac > 6 || check_arg(ac, av))
+	if (ac < 5 || ac > 6 || check_args(ac, av))
 		return (write(2, "Error: Invalid agruments\n", 24), EXIT_FAILURE);
 	if (init_infos(&info, av) || philosopheres(&info))
 		return (EXIT_FAILURE);
