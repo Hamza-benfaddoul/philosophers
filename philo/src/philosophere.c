@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophere.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hamza <hamza@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:29:23 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/09 15:33:37 by hamza            ###   ########.fr       */
+/*   Updated: 2023/04/11 11:24:34 by hbenfadd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,10 @@ void	*philo_rotune(void *ptr)
 	while (1)
 	{
 		pthread_mutex_lock(philo->lf);
-		putmsg(philo, "has taken a fork");
+		putmsg(philo, "has taken a fork", 0);
 		pthread_mutex_lock(philo->rf);
-		putmsg(philo, "has taken a fork");
-		putmsg(philo, "is eating");
+		putmsg(philo, "has taken a fork", 0);
+		putmsg(philo, "is eating", 0);
 		pthread_mutex_lock(&philo->check_death);
 		++philo->is_eaten;
 		philo->last_eat = get_time_ms();
@@ -67,7 +67,7 @@ void	*philo_rotune(void *ptr)
 		ft_usleep(philo->info->time_2e);
 		pthread_mutex_unlock(philo->lf);
 		pthread_mutex_unlock(philo->rf);
-		putmsg(philo, "is thinking");
+		putmsg(philo, "is thinking", 0);
 		ft_usleep(philo->info->time_2s);
 	}
 	return (NULL);
@@ -94,16 +94,16 @@ int	check_death(t_philo *philo)
 			philo[i].is_eaten++;
 			philo[i].info->overeat++;
 		}
-		pthread_mutex_unlock(&philo[i].check_death);
-		if (diff_time > philo->info->time_2d || philo[i].info->overeat == philo[i].info->num )
+		if (philo[i].info->overeat == philo[i].info->num)
 		{
 			pthread_mutex_lock(&philo[i].info->putmsg);
-			if(philo[i].info->overeat == philo[i].info->num)
-				printf("%zu all philos eate %d times\n", diff_time, philo->info->nbr_t2e * philo->info->num);
-			else
-				printf("%zu %d \033[91mdied\n", diff_time, i + 1);
+			printf("\033[0;32m%ld all philos eate %d times\033[0m\n",
+				get_time_ms() - philo->start, philo->info->nbr_t2e);
 			return (1);
 		}
+		pthread_mutex_unlock(&philo[i].check_death);
+		if (diff_time > philo->info->time_2d)
+			return (putmsg(&philo[i], "\033[91mdied\033[0m", 1), 1);
 	}
 	return (0);
 }
@@ -121,13 +121,13 @@ int	create_philo(t_philo *philo, int num)
 
 	th = (pthread_t *)malloc(sizeof(pthread_t) * num);
 	if (!th)
-		return (write(2, "Error\nmalloc failed\n", 20), EXIT_FAILURE);
+		return (write(2, "Error: malloc failed\n", 20), EXIT_FAILURE);
 	i = -1;
 	while (++i < num)
 	{
 		philo[i].last_eat = get_time_ms();
 		if (pthread_create(&th[i], NULL, &philo_rotune, (void *)&philo[i]))
-			return (write(2, "Error\npthread_create failed\n", 28), EXIT_FAILURE);
+			return (write(2, "Error: pthread_create failed\n", 28), 1);
 	}
 	while (!check_death(philo))
 		;
@@ -145,7 +145,7 @@ int	philosopheres(t_infos *info)
 
 	philos = (t_philo *)malloc(sizeof(t_philo) * info->num);
 	if (!philos)
-		return (write(2, "Error\nmalloc failed\n", 20), EXIT_FAILURE);
+		return (write(2, "Error: malloc failed\n", 20), EXIT_FAILURE);
 	if (init_philo(philos, info) || create_philo(philos, info->num))
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);

@@ -6,7 +6,7 @@
 /*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 14:23:21 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/09 11:18:52y hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/11 11:22:36 by hbenfadd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,13 @@ int	init_mutex(t_infos *info)
 	{
 		if (pthread_mutex_init(&info->fork[i], NULL) != 0)
 		{
-			write(2, "Error\n mutex flaid\n", 19);
+			write(2, "Error: mutex flaid\n", 19);
 			return (EXIT_FAILURE);
 		}
 	}
 	if (pthread_mutex_init(&info->putmsg, NULL))
 	{
-		write(2, "Error\n mutex flaid\n", 19);
+		write(2, "Error: mutex flaid\n", 19);
 		return (EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);
@@ -55,14 +55,14 @@ int	init_infos(t_infos *info, char **av)
 	info->time_2s = ft_atoi(av[4]);
 	info->fork = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * info->num);
 	if (!info->fork)
-		return (write(1, "Error\nmalloc flaid\n", 19), EXIT_FAILURE);
+		return (write(1, "Error: malloc flaid\n", 19), EXIT_FAILURE);
 	if (av[5])
 		info->nbr_t2e = ft_atoi(av[5]);
 	else
-		info->nbr_t2e = 0;
+		info->nbr_t2e = -1;
 	mutex = init_mutex(info);
 	if (mutex)
-		return (write(1, "Error\ninit_mutex flaid\n", 23), EXIT_FAILURE);
+		return (write(1, "Error: init_mutex flaid\n", 23), EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
 
@@ -109,7 +109,7 @@ int	main(int ac, char **av)
 	t_infos	info;
 
 	if (ac < 5 || ac > 6 || check_arg(ac, av))
-		return (write(2, "Error\nInvalid agruments\n", 24), EXIT_FAILURE);
+		return (write(2, "Error: Invalid agruments\n", 24), EXIT_FAILURE);
 	if (init_infos(&info, av) || philosopheres(&info))
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
