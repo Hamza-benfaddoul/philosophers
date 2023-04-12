@@ -6,7 +6,7 @@
 /*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 12:35:59 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/11 14:48:59 by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/12 17:25:14 by hbenfadd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,21 @@ static int	init_infos(t_infos *info, char **av)
 		info->eat_count_max = ft_atoi(av[5]);
 	else
 		info->eat_count_max = -1;
-	if (sem_init(&info->forks, 1, info->num) != 0)
+	info->pid = malloc(sizeof(pid_t) * info->num);
+	if (!info->pid)
+		return (write(2, "Error: malloc failed\n", 21), EXIT_FAILURE);
+	sem_unlink("/forks");
+	sem_unlink("/putmsg");
+	sem_unlink("/nbr_eat");
+	info->forks = sem_open("/forks", O_CREAT, 0644, info->num);
+	if (info->forks == SEM_FAILED)
 		return (write(2, "Error: sem_init failed\n", 23), EXIT_FAILURE);
-	if (pthread_mutex_init(&info->putmsg, NULL))
-		return (write(2, "Error: mutex_init failed\n", 25), EXIT_FAILURE);
+	info->putmsg = sem_open("/putmsg", O_CREAT, 0644, 1);
+	if (info->putmsg == SEM_FAILED)
+		return (write(2, "Error: sem_init failed\n", 23), EXIT_FAILURE);
+	info->nbr_eat = sem_open("/nbr_eat", O_CREAT, 0644, 1);
+	if (info->nbr_eat == SEM_FAILED)
+		return (write(2, "Error: sem_init failed\n", 23), EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
 
@@ -77,8 +88,9 @@ int	main(int ac, char **av)
 {
 	t_infos	info;
 
+	memset(&info, 0, sizeof(t_infos));
 	if (ac < 5 || ac > 6 || check_args(ac, av))
-		return (write(2, "Error: Invalid agruments\n", 24), EXIT_FAILURE);
+		return (write(2, "Error: Invalid agruments\n", 25), EXIT_FAILURE);
 	if (init_infos(&info, av) || philosopheres(&info))
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);

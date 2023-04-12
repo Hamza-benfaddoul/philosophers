@@ -6,7 +6,7 @@
 /*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 10:42:21 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/11 14:42:46 by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/12 14:09:47 by hbenfadd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,9 @@
 */
 void	putmsg(t_philo *philo, char *action, int is_done)
 {
-	pthread_mutex_lock(&philo->info->putmsg);
-	printf("%zu %d %s\n", get_time_ms() - philo->start, philo->id + 1, action);
+	sem_wait(philo->info->putmsg);
+	printf("%zu %d %s\n", get_time_ms() - philo->info->start,
+		philo->id + 1, action);
 	if (!is_done)
-		pthread_mutex_unlock(&philo->info->putmsg);
+		sem_post(philo->info->putmsg);
 }

@@ -6,7 +6,7 @@
 /*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 12:33:06 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/11 13:32:59by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/12 17:25:27 by hbenfadd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,10 @@
 # include <semaphore.h>
 # include <limits.h>
 # include <stdio.h>
+# include <sys/wait.h>
+# include <signal.h>
+# include <pthread.h>
+# include <string.h>
 
 typedef struct s_infos
 {
@@ -27,14 +31,19 @@ typedef struct s_infos
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				eat_count_max;
-	pthread_mutex_t	putmsg;
-	sem_t			forks;
+	pthread_t		*check_nbr_eat;
+	sem_t			*nbr_eat;
+	pid_t			*pid;
+	long			start;
+	sem_t			*putmsg;
+	sem_t			*forks;
 }	t_infos;
 
 typedef struct s_philo
 {
 	int		id;
-	int		start;
+	long	last_eat;
+	int		over;
 	t_infos	*info;
 }	t_philo;
 

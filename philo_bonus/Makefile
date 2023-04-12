@@ -13,7 +13,7 @@
 NAME	= philo
 CC		= cc 
 HEADER	= -I./inc
-CFLAGS	=  -Wall -Wextra -Werror -pthread $(HEADER) #-fsanitize=thread
+CFLAGS	=  -Wall -Wextra -Werror -pthread $(HEADER)  -g3 -fsanitize=address #-fsanitize=thread
 RM		= rm -rf
 
 # colors
@@ -22,7 +22,7 @@ YALLOW	= \033[1;93m
 GREEN	= \033[1;32m
 
 # src files
-SRC		= ft_atoi_bonus.c ft_usleep_bonus.c philosopheres_bonus.c \
+SRC		= ft_atoi_bonus.c ft_usleep_bonus.c philosopheres_bonus.c get_time_ms_bonus.c \
 			utils_bonus.c
 
 SRCS	= $(addprefix ./src/, $(SRC)) main_bonus.c 
