@@ -6,7 +6,7 @@
 /*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:29:23 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/11 14:23:02 by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/12 17:27:37 by hbenfadd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,9 @@ void	*philo_rotune(void *ptr)
 		philo->last_eat = get_time_ms();
 		pthread_mutex_unlock(&philo->check_death);
 		ft_usleep(philo->info->time_2e);
+		putmsg(philo, "is sleeping", 0);
 		pthread_mutex_unlock(philo->lf);
 		pthread_mutex_unlock(philo->rf);
-		putmsg(philo, "is sleeping", 0);
 		ft_usleep(philo->info->time_2s);
 		putmsg(philo, "is thinking", 0);
 	}
@@ -122,13 +122,13 @@ int	create_philo(t_philo *philo, int num)
 
 	th = (pthread_t *)malloc(sizeof(pthread_t) * num);
 	if (!th)
-		return (write(2, "Error: malloc failed\n", 20), EXIT_FAILURE);
+		return (write(2, "Error: malloc failed\n", 21), EXIT_FAILURE);
 	i = -1;
 	while (++i < num)
 	{
 		philo[i].last_eat = get_time_ms();
 		if (pthread_create(&th[i], NULL, &philo_rotune, (void *)&philo[i]))
-			return (write(2, "Error: pthread_create failed\n", 28), 1);
+			return (write(2, "Error: pthread_create failed\n", 29), 1);
 	}
 	while (!check_death(philo))
 		;
@@ -146,7 +146,7 @@ int	philosopheres(t_infos *info)
 
 	philos = (t_philo *)malloc(sizeof(t_philo) * info->num);
 	if (!philos)
-		return (write(2, "Error: malloc failed\n", 20), EXIT_FAILURE);
+		return (write(2, "Error: malloc failed\n", 21), EXIT_FAILURE);
 	if (init_philo(philos, info) || create_philo(philos, info->num))
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
