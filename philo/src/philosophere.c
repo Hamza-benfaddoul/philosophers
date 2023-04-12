@@ -6,7 +6,7 @@
 /*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:29:23 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/12 10:43:54 by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/12 13:55:04 by hbenfadd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,9 @@ void	*philo_rotune(void *ptr)
 		philo->last_eat = get_time_ms();
 		pthread_mutex_unlock(&philo->check_death);
 		ft_usleep(philo->info->time_2e);
+		putmsg(philo, "is sleeping", 0);
 		pthread_mutex_unlock(philo->lf);
 		pthread_mutex_unlock(philo->rf);
-		putmsg(philo, "is sleeping", 0);
 		ft_usleep(philo->info->time_2s);
 		putmsg(philo, "is thinking", 0);
 	}
