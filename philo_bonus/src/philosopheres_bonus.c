@@ -6,55 +6,85 @@
 /*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 13:40:53 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/12 17:25:41 by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/13 12:17:59 by hbenfadd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
+/**
+ * chekc_death - check if the philosophers are dead
+ * @arg: the struct that contains all the information about the philosophers
+ * Return: void
+*/
+void	*check_death(void *arg)
+{
+	t_philo	*philo;
+	long	l_eat;
+
+	philo = (t_philo *)arg;
+	while (1)
+	{
+		l_eat = philo->last_eat.tv_sec * 1000 + philo->last_eat.tv_usec / 1000;
+		if (get_time_ms() - l_eat > philo->info->time_to_die)
+		{
+			putmsg(philo, "\033[31mdied\033[0m", 1);
+			exit(EXIT_FAILURE);
+		}
+		ft_usleep(100);
+	}
+	return (NULL);
+}
+
+/**
+ * philo_routine - the routine of the philosophers (eat, sleep, think)
+ 	and check if they are dead or not (if they have eaten enough)
+ * @philo: the struct that contains all the information about the philosophers
+ * Return: void
+*/
+void	philo_routine(t_philo *philo)
+{
+	while (1)
+	{
+		sem_wait(philo->info->forks);
+		putmsg(philo, "has taken a fork", 0);
+		sem_wait(philo->info->forks);
+		putmsg(philo, "has taken a fork", 0);
+		putmsg(philo, "is eating", 0);
+		gettimeofday(&philo->last_eat, NULL);
+		ft_usleep(philo->info->time_to_eat);
+		putmsg(philo, "is sleeping", 0);
+		sem_post(philo->info->forks);
+		sem_post(philo->info->forks);
+		ft_usleep(philo->info->time_to_sleep);
+		if (philo->info->eat_max != -1 && ++philo->over >= philo->info->eat_max)
+			exit(EXIT_SUCCESS);
+		putmsg(philo, "is thinking", 0);
+	}
+}
+
 static int	start_philos(t_philo *philo, t_infos *info)
 {
-	int		i;
+	int			i;
+	pthread_t	thread;
 
 	i = -1;
 	info->start = get_time_ms();
 	while (++i < info->num)
 	{
 		info->pid[i] = fork();
-		philo[i].last_eat = get_time_ms();
+		gettimeofday(&philo[i].last_eat, NULL);
 		if (!info->pid[i])
 		{
-			while (1)
-			{
-				sem_wait(info->forks);
-				putmsg(&philo[i], "has taken a fork", 0);
-				sem_wait(info->forks);
-				putmsg(&philo[i], "has taken a fork", 0);
-				putmsg(&philo[i], "is eating", 0);
-				if (get_time_ms() - philo[i].last_eat > info->time_to_die)
-				{
-					putmsg(&philo[i], "\033[31mdied\033[0m", 1);
-					exit(EXIT_FAILURE);
-				}
-				sem_post(info->nbr_eat);
-				philo[i].last_eat = get_time_ms();
-				ft_usleep(info->time_to_eat);
-				putmsg(&philo[i], "is sleeping", 0);
-				sem_post(info->forks);
-				sem_post(info->forks);
-				ft_usleep(info->time_to_sleep);
-				putmsg(&philo[i], "is thinking", 0);
-				if (info->eat_count_max != -1 && ++philo[i].over >= info->eat_count_max)
-					exit(EXIT_SUCCESS);
-			}
+			pthread_create(&thread, NULL, &check_death, &philo[i]);
+			philo_routine(&philo[i]);
+			exit(EXIT_SUCCESS);
 		}
-		if (i % 2 == 0)
-			ft_usleep(100);
 	}
 	return (EXIT_SUCCESS);
 }
 
-/*
+/**
 * init_philo - initialize the philosophers
 * @philo: the struct that contains all the information about the philosophers
 * @info: the struct that contains all the information about the program
@@ -75,7 +105,7 @@ static int	init_philo(t_philo *philo, t_infos *info)
 	return (EXIT_SUCCESS);
 }
 
-/*
+/**
 * philosophers - create the philosophers 
 * @info: the struct that contains all the information about the program
 * Return: EXIT_SUCCESS or EXIT_FAILURE
@@ -90,9 +120,7 @@ int	philosopheres(t_infos *info)
 	philo = malloc(sizeof(t_philo) * info->num);
 	if (!philo)
 		return (write(2, "Error: malloc failed\n", 21), EXIT_FAILURE);
-	if (init_philo(philo, info) != EXIT_SUCCESS)
-		return (EXIT_FAILURE);
-	if (start_philos(philo, info) != EXIT_SUCCESS)
+	if (init_philo(philo, info) || start_philos(philo, info))
 		return (EXIT_FAILURE);
 	while (waitpid(-1, &status, 0) > 0)
 	{
@@ -103,7 +131,10 @@ int	philosopheres(t_infos *info)
 			return (EXIT_FAILURE);
 		}
 	}
-	printf("\033[92mAll philosophers have eaten at least %d times\n\033[0m",
-		info->eat_count_max);
+	if (ECHILD != errno && info->eat_max != -1)
+		return (write(2, "Error: waitpid failed\n", 22), EXIT_FAILURE);
+	else if (info->eat_max != -1)
+		printf("\033[92mAll philosophers have eaten at least %d times\n\033[0m",
+			info->eat_max);
 	return (EXIT_SUCCESS);
 }

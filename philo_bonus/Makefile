@@ -13,7 +13,7 @@
 NAME	= philo
 CC		= cc 
 HEADER	= -I./inc
-CFLAGS	=  -Wall -Wextra -Werror -pthread $(HEADER)  -g3 -fsanitize=address #-fsanitize=thread
+CFLAGS	=  -Wall -Wextra -Werror -pthread $(HEADER)
 RM		= rm -rf
 
 # colors
