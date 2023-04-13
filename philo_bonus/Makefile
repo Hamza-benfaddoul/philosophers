@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME	= philo
+NAME	= philo_bonus
 CC		= cc 
 HEADER	= -I./inc
 CFLAGS	=  -Wall -Wextra -Werror -pthread $(HEADER)

@@ -6,7 +6,7 @@
 /*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 13:40:53 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/13 12:17:59 by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/13 14:12:03 by hbenfadd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void	*check_death(void *arg)
 			putmsg(philo, "\033[31mdied\033[0m", 1);
 			exit(EXIT_FAILURE);
 		}
-		ft_usleep(100);
 	}
 	return (NULL);
 }
@@ -78,7 +77,6 @@ static int	start_philos(t_philo *philo, t_infos *info)
 		{
 			pthread_create(&thread, NULL, &check_death, &philo[i]);
 			philo_routine(&philo[i]);
-			exit(EXIT_SUCCESS);
 		}
 	}
 	return (EXIT_SUCCESS);

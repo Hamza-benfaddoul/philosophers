@@ -6,7 +6,7 @@
 #    By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/06 15:34:29 by hbenfadd          #+#    #+#              #
-#    Updated: 2023/04/11 14:43:49 by hbenfadd         ###   ########.fr        #
+#    Updated: 2023/04/13 13:26:17 by hbenfadd         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME	= philo
 
 CC		= cc 
 HEADER	= -I./inc
-CFLAGS	=  -Wall -Wextra -Werror -pthread $(HEADER) #-fsanitize=thread -g3
+CFLAGS	=  -Wall -Wextra -Werror -pthread $(HEADER) #-fsanitize=address -g3
 RM		= rm -rf
 
 # colors

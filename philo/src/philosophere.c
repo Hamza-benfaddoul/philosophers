@@ -6,7 +6,7 @@
 /*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:29:23 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/12 17:27:37 by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/13 13:45:20 by hbenfadd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,8 @@ int	check_death(t_philo *philo)
 		if (philo[i].info->overeat >= philo[i].info->num)
 		{
 			pthread_mutex_lock(&philo[i].info->putmsg);
-			printf("\033[0;32m%ld all philos eate %d times\033[0m\n",
-				get_time_ms() - philo->start, philo->info->nbr_t2e);
+			printf("\033[0;32mall philos eate at least %d times\033[0m\n",
+				philo[i].info->nbr_t2e);
 			return (1);
 		}
 		pthread_mutex_unlock(&philo[i].check_death);
