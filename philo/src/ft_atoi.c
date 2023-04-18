@@ -6,13 +6,13 @@
 /*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/07 15:04:45 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/05 12:33:11 by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/17 12:13:39 by hbenfadd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_atoi(const char *str)
+long long	ft_atoi(const char *str)
 {
 	unsigned long int	result;
 	int					sign;
@@ -32,10 +32,8 @@ int	ft_atoi(const char *str)
 	while (*str && (*str >= '0' && *str <= '9'))
 	{
 		result = result * 10 + (*str - 48);
-		if (result >= LONG_MAX && sign == 1)
+		if (result >= LONG_MAX)
 			return (-1);
-		if (result > LONG_MAX && sign == -1)
-			return (0);
 		str++;
 	}
 	return (result * sign);

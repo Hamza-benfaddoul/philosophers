@@ -6,7 +6,7 @@
 /*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 12:35:59 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/13 12:19:48 by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/17 12:22:41 by hbenfadd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,8 @@ static int	check_args(int ac, char **av)
 				return (EXIT_FAILURE);
 			j++;
 		}
-		if ((ft_atoi(av[i]) < 60 && i > 1 && i < 5) || !ft_atoi(av[1]))
+		if ((ft_atoi(av[i]) < 60 && i > 1 && i < 5) || ft_atoi(av[i]) < 0
+			|| av[i][0] == '\0' || !av[i] || !ft_atoi(av[1]))
 			return (EXIT_FAILURE);
 		i++;
 	}

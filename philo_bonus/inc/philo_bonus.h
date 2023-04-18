@@ -6,7 +6,7 @@
 /*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 12:33:06 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/13 12:07:56 by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/17 12:00:31 by hbenfadd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@
 typedef struct s_infos
 {
 	int				num;
-	int				time_to_die;
-	int				time_to_eat;
-	int				time_to_sleep;
-	int				eat_max;
+	long long		time_to_die;
+	long long		time_to_eat;
+	long long		time_to_sleep;
+	long long		eat_max;
 	long			start;
 	pthread_t		*check_nbr_eat;
 	pid_t			*pid;
@@ -47,10 +47,10 @@ typedef struct s_philo
 	t_infos			*info;
 }	t_philo;
 
-void	putmsg(t_philo *philo, char *action, int is_done);
-int		philosopheres(t_infos *info);
-int		ft_atoi(const char *str);
-void	ft_usleep(long time);
-long	get_time_ms(void);
+void		putmsg(t_philo *philo, char *action, int is_done);
+int			philosopheres(t_infos *info);
+long long	ft_atoi(const char *str);
+void		ft_usleep(long time);
+long		get_time_ms(void);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 13:40:53 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/13 14:12:03 by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/17 12:39:15 by hbenfadd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ void	philo_routine(t_philo *philo)
 {
 	while (1)
 	{
+		if (philo->info->eat_max != -1 && philo->over++ >= philo->info->eat_max)
+			exit(EXIT_SUCCESS);
 		sem_wait(philo->info->forks);
 		putmsg(philo, "has taken a fork", 0);
 		sem_wait(philo->info->forks);
@@ -56,8 +58,6 @@ void	philo_routine(t_philo *philo)
 		sem_post(philo->info->forks);
 		sem_post(philo->info->forks);
 		ft_usleep(philo->info->time_to_sleep);
-		if (philo->info->eat_max != -1 && ++philo->over >= philo->info->eat_max)
-			exit(EXIT_SUCCESS);
 		putmsg(philo, "is thinking", 0);
 	}
 }
@@ -72,6 +72,12 @@ static int	start_philos(t_philo *philo, t_infos *info)
 	while (++i < info->num)
 	{
 		info->pid[i] = fork();
+		if (info->pid[i] < 0)
+		{
+			while (--i >= 0)
+				kill(info->pid[i], SIGKILL);
+			return (write(2, "Error: fork failed\n", 19), EXIT_FAILURE);
+		}
 		gettimeofday(&philo[i].last_eat, NULL);
 		if (!info->pid[i])
 		{
@@ -132,7 +138,7 @@ int	philosopheres(t_infos *info)
 	if (ECHILD != errno && info->eat_max != -1)
 		return (write(2, "Error: waitpid failed\n", 22), EXIT_FAILURE);
 	else if (info->eat_max != -1)
-		printf("\033[92mAll philosophers have eaten at least %d times\n\033[0m",
+		printf("\033[92mAll philosophers have eaten at least %lld times\n\033[0m",
 			info->eat_max);
 	return (EXIT_SUCCESS);
 }

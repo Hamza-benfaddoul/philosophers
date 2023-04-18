@@ -6,7 +6,7 @@
 /*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 12:27:15 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/11 10:56:49 by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/17 12:29:56 by hbenfadd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@
 typedef struct s_infos
 {
 	int				num;
-	int				time_2d;
-	int				time_2e;
-	int				time_2s;
-	int				nbr_t2e;
-	int				overeat;
+	long long		time_2d;
+	long long		time_2e;
+	long long		time_2s;
+	long long		nbr_t2e;
+	long long		overeat;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	putmsg;
 
@@ -45,10 +45,10 @@ typedef struct s_philosophere
 
 }	t_philo;
 
-void	putmsg(t_philo *philo, char *action, int is_done);
-int		philosopheres(t_infos *info);
-int		ft_atoi(const char *str);
-void	ft_usleep(long time);
-long	get_time_ms(void);
+void		putmsg(t_philo *philo, char *action, int is_done);
+int			philosopheres(t_infos *info);
+long long	ft_atoi(const char *str);
+void		ft_usleep(long time);
+long		get_time_ms(void);
 
 #endif
