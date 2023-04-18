@@ -6,7 +6,7 @@
 /*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 14:23:21 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/17 12:30:30 by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/18 13:55:00 by hbenfadd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	init_infos(t_infos *info, char **av)
 	info->fork = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * info->num);
 	if (!info->fork)
 		return (write(1, "Error: malloc flaid\n", 20), EXIT_FAILURE);
-	if (av[5])
+	if (av[5] && av[5][0])
 		info->nbr_t2e = ft_atoi(av[5]);
 	else
 		info->nbr_t2e = -1;
@@ -90,7 +90,7 @@ int	check_args(int ac, char **av)
 			j++;
 		}
 		if ((ft_atoi(av[i]) < 60 && i > 1 && i < 5) || ft_atoi(av[i]) < 0
-			|| av[i][0] == '\0' || !av[i] || !ft_atoi(av[1]))
+			|| (av[i][0] == '\0' && i < 5) || !av[i] || !ft_atoi(av[1]))
 			return (EXIT_FAILURE);
 		i++;
 	}

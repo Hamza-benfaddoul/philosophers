@@ -6,7 +6,7 @@
 /*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 12:35:59 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/17 12:22:41 by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/18 13:55:20 by hbenfadd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static int	init_infos(t_infos *info, char **av)
 	info->time_to_die = ft_atoi(av[2]);
 	info->time_to_eat = ft_atoi(av[3]);
 	info->time_to_sleep = ft_atoi(av[4]);
-	if (av[5])
+	if (av[5] && av[5][0])
 		info->eat_max = ft_atoi(av[5]);
 	else
 		info->eat_max = -1;
@@ -79,7 +79,7 @@ static int	check_args(int ac, char **av)
 			j++;
 		}
 		if ((ft_atoi(av[i]) < 60 && i > 1 && i < 5) || ft_atoi(av[i]) < 0
-			|| av[i][0] == '\0' || !av[i] || !ft_atoi(av[1]))
+			|| (av[i][0] == '\0' && i < 5) || !av[i] || !ft_atoi(av[1]))
 			return (EXIT_FAILURE);
 		i++;
 	}
