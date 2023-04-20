@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophere.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hamza <hamza@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:29:23 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/20 13:45:48 by hamza            ###   ########.fr       */
+/*   Updated: 2023/04/20 13:52:19 by hbenfadd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,10 +123,10 @@ int	create_philo(t_philo *philo, t_infos *info)
 	if (!info->th)
 		return (write(2, "Error: malloc failed\n", 21), EXIT_FAILURE);
 	i = -1;
-	while (++i < info->num) 
+	while (++i < info->num)
 	{
 		philo[i].last_eat = get_time_ms();
-		if (pthread_create(&info->th[i], NULL, &philo_rotune, (void *)&philo[i]))
+		if (pthread_create(&info->th[i], NULL, &philo_rotune, &philo[i]))
 			return (write(2, "Error: pthread_create failed\n", 29), 1);
 	}
 	while (!check_death(philo))
