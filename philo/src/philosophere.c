@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophere.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hamza <hamza@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:29:23 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/17 12:30:08 by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/20 13:45:48 by hamza            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,19 +115,18 @@ int	check_death(t_philo *philo)
  * @num: number of philosopheres
  * Return: EXIT_SUCCESS or EXIT_FAILURE
 */
-int	create_philo(t_philo *philo, int num)
+int	create_philo(t_philo *philo, t_infos *info)
 {
 	int			i;
-	pthread_t	*th;
 
-	th = (pthread_t *)malloc(sizeof(pthread_t) * num);
-	if (!th)
+	info->th = (pthread_t *)malloc(sizeof(pthread_t) * info->num);
+	if (!info->th)
 		return (write(2, "Error: malloc failed\n", 21), EXIT_FAILURE);
 	i = -1;
-	while (++i < num)
+	while (++i < info->num) 
 	{
 		philo[i].last_eat = get_time_ms();
-		if (pthread_create(&th[i], NULL, &philo_rotune, (void *)&philo[i]))
+		if (pthread_create(&info->th[i], NULL, &philo_rotune, (void *)&philo[i]))
 			return (write(2, "Error: pthread_create failed\n", 29), 1);
 	}
 	while (!check_death(philo))
@@ -147,7 +146,7 @@ int	philosopheres(t_infos *info)
 	philos = (t_philo *)malloc(sizeof(t_philo) * info->num);
 	if (!philos)
 		return (write(2, "Error: malloc failed\n", 21), EXIT_FAILURE);
-	if (init_philo(philos, info) || create_philo(philos, info->num))
+	if (init_philo(philos, info) || create_philo(philos, info))
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }

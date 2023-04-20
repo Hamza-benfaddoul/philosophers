@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hamza <hamza@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 12:27:15 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/17 12:29:56 by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/20 13:34:26 by hamza            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct s_infos
 	long long		time_2s;
 	long long		nbr_t2e;
 	long long		overeat;
+	pthread_t		*th;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	putmsg;
 

@@ -3,14 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hamza <hamza@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 14:23:21 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/18 13:55:00 by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/20 13:41:40 by hamza            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	cleanup(t_infos *info, t_philo *philo)
+{
+	int	i;
+
+	i = -1;
+	while (++i < info->num)
+		pthread_mutex_destroy(&info->fork[i]);
+	pthread_mutex_destroy(&info->putmsg);
+	free(info->fork);
+	free(info->th);
+	free(philo);
+}
 
 /**
  * init - initialize the mutex for echo fork
@@ -112,6 +125,6 @@ int	main(int ac, char **av)
 	if (ac < 5 || ac > 6 || check_args(ac, av))
 		return (write(2, "Error: Invalid agruments\n", 25), EXIT_FAILURE);
 	if (init_infos(&info, av) || philosopheres(&info))
-		return (EXIT_FAILURE);
-	return (EXIT_SUCCESS);
+		return (cleanup(&info, NULL), EXIT_FAILURE);
+	return (cleanup(&info, NULL), EXIT_SUCCESS);
 }
