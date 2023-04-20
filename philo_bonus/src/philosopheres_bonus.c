@@ -6,7 +6,7 @@
 /*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 13:40:53 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/17 12:39:15 by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/20 14:17:51 by hbenfadd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,20 +125,20 @@ int	philosopheres(t_infos *info)
 	if (!philo)
 		return (write(2, "Error: malloc failed\n", 21), EXIT_FAILURE);
 	if (init_philo(philo, info) || start_philos(philo, info))
-		return (EXIT_FAILURE);
+		return (free(philo), EXIT_FAILURE);
 	while (waitpid(-1, &status, 0) > 0)
 	{
 		if (status == 256)
 		{
 			while (++i < info->num)
 				kill(info->pid[i], SIGKILL);
-			return (EXIT_FAILURE);
+			return (free(philo), EXIT_FAILURE);
 		}
 	}
 	if (ECHILD != errno && info->eat_max != -1)
-		return (write(2, "Error: waitpid failed\n", 22), EXIT_FAILURE);
+		return (write(2, "Error: waitpid failed\n", 22), free(philo), 1);
 	else if (info->eat_max != -1)
-		printf("\033[92mAll philosophers have eaten at least %lld times\n\033[0m",
+		printf("\033[92mAll philosophers have eaten at least %lld times\033[m\n",
 			info->eat_max);
-	return (EXIT_SUCCESS);
+	return (free(philo), EXIT_SUCCESS);
 }
