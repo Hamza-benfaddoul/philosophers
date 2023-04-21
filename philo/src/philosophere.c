@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophere.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hamza <hamza@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:29:23 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/20 13:52:19 by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/21 10:51:53 by hamza            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int	check_death(t_philo *philo)
 	{
 		pthread_mutex_lock(&philo[i].check_death);
 		diff_time = get_time_ms() - philo[i].last_eat;
-		if (philo[i].is_eaten == philo[i].info->nbr_t2e)
+		if (philo[i].is_eaten >= philo[i].info->nbr_t2e)
 		{
 			philo[i].is_eaten++;
 			philo[i].info->overeat++;
@@ -147,6 +147,6 @@ int	philosopheres(t_infos *info)
 	if (!philos)
 		return (write(2, "Error: malloc failed\n", 21), EXIT_FAILURE);
 	if (init_philo(philos, info) || create_philo(philos, info))
-		return (EXIT_FAILURE);
-	return (EXIT_SUCCESS);
+		return (free(philos), EXIT_FAILURE);
+	return (free(philos), EXIT_SUCCESS);
 }
