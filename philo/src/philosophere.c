@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophere.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hamza <hamza@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:29:23 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/21 10:51:53 by hamza            ###   ########.fr       */
+/*   Updated: 2023/04/22 10:44:55 by hbenfadd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,8 @@ void	*philo_rotune(void *ptr)
 		putmsg(philo, "has taken a fork", 0);
 		putmsg(philo, "is eating", 0);
 		pthread_mutex_lock(&philo->check_death);
-		++philo->is_eaten;
+		if (philo->info->nbr_t2e > 0)
+			philo->is_eaten++;
 		philo->last_eat = get_time_ms();
 		pthread_mutex_unlock(&philo->check_death);
 		ft_usleep(philo->info->time_2e);
@@ -90,7 +91,7 @@ int	check_death(t_philo *philo)
 	{
 		pthread_mutex_lock(&philo[i].check_death);
 		diff_time = get_time_ms() - philo[i].last_eat;
-		if (philo[i].is_eaten >= philo[i].info->nbr_t2e)
+		if (philo[i].is_eaten == philo[i].info->nbr_t2e)
 		{
 			philo[i].is_eaten++;
 			philo[i].info->overeat++;
