@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosopheres_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hamza <hamza@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 13:40:53 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/20 14:17:51 by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/22 15:48:28 by hamza            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ void	philo_routine(t_philo *philo)
 		putmsg(philo, "has taken a fork", 0);
 		sem_wait(philo->info->forks);
 		putmsg(philo, "has taken a fork", 0);
-		putmsg(philo, "is eating", 0);
 		gettimeofday(&philo->last_eat, NULL);
+		putmsg(philo, "is eating", 0);
 		ft_usleep(philo->info->time_to_eat);
 		putmsg(philo, "is sleeping", 0);
 		sem_post(philo->info->forks);
