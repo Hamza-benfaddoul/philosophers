@@ -6,7 +6,7 @@
 /*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:29:23 by hbenfadd          #+#    #+#             */
-/*   Updated: 2023/04/22 10:44:55 by hbenfadd         ###   ########.fr       */
+/*   Updated: 2023/04/22 15:48:05 by hamza            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	*philo_rotune(void *ptr)
 		putmsg(philo, "is eating", 0);
 		pthread_mutex_lock(&philo->check_death);
 		if (philo->info->nbr_t2e > 0)
-			philo->is_eaten++;
+			++philo->is_eaten;
 		philo->last_eat = get_time_ms();
 		pthread_mutex_unlock(&philo->check_death);
 		ft_usleep(philo->info->time_2e);
