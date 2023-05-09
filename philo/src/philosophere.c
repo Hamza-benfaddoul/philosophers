@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   philosophere.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hamza <hamza@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hbenfadd <hbenfadd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 15:29:23 by hbenfadd          #+#    #+#             */
 /*   Updated: 2023/04/22 15:48:05 by hamza            ###   ########.fr       */
@@ -91,7 +91,7 @@ int	check_death(t_philo *philo)
 	{
 		pthread_mutex_lock(&philo[i].check_death);
 		diff_time = get_time_ms() - philo[i].last_eat;
-		if (philo[i].is_eaten >= philo[i].info->nbr_t2e)
+		if (philo[i].is_eaten == philo[i].info->nbr_t2e)
 		{
 			philo[i].is_eaten++;
 			philo[i].info->overeat++;
